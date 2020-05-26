@@ -91,7 +91,7 @@ window.component('push.popup', function(popup) {
     };
 
     popup.controller = function (message) {
-        var popup = this, apps = [], onetimeCohorts = [], cohorts = [], events = [], geos = [];
+        var popup = this, apps = [], onetimeCohorts = [], cohorts = [], events = [], geos = [], countries = [];
 
         if (message.auto()) {
             cohorts = push.dashboard.cohorts.map(function (cohort) {
@@ -107,6 +107,16 @@ window.component('push.popup', function(popup) {
             geos = push.dashboard.geos.map(function (geo) {
                 return new C.selector.Option({ value: geo._id, title: geo.title, selected: message.geos().indexOf(geo._id) !== -1 });
             });
+        }
+
+        if(push.dashboard.countries) {
+          countries = push.dashboard.countries.map(function (country) {
+            return new C.selector.Option({ value: 'country.cc', title: 'country.name', selected: false });
+          })
+        } else {
+          ['IT', 'CA', 'NZ'].map(cc => {
+            return new C.selector.Option({ value: cc, title: cc, selected: false });
+          })
         }
 
         // t.set('pu.po.tab1.title', t('pu.po.tab1.title' + !!window.countlyGeo));
@@ -655,6 +665,16 @@ window.component('push.popup', function(popup) {
                         }
                     });
 
+                    this.selectCountries = new C.multiselect.controller({
+                      placeholder: t('Placeholder for multiselect'),
+                      options: countries,
+                      value: function () {
+                        if (arguments.length) {
+                          message.countries(countries.filter(function (o) { return o.selected(); }).map(function (o){ return o.value(); }));
+                        }
+                      }
+                    })
+
                     this.selectOnetimeCohorts = new C.multiselect.controller({
                         placeholder: t('pu.po.tab1.geos.no'),
                         options: onetimeCohorts,
@@ -716,6 +736,11 @@ window.component('push.popup', function(popup) {
                                 m('h4', t('pu.po.tab1.testing')),
                                 C.radio.view(ctrl.radioTest),
                                 m('.desc', t('pu.po.tab1.testing-desc')),
+                            ]),
+                            m('.form-group', [
+                              m('h4', 'Test Title'),
+                              C.multiselect.view(ctrl.selectCountries),
+                              m('.desc', 'Select users belonging to a country'),
                             ]),
                             m('.btns', {key: 'btns'}, [
                                 m('a.btn-next', { href: '#', onclick: popup.next, disabled: popup.tabenabled(1) ? false : 'disabled' }, t('pu.po.next')),

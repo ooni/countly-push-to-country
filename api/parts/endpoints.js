@@ -201,6 +201,7 @@ function cachedData(note) {
                     users: results[3] ? results[3] : 0,
                     cohorts: results[4] || [],
                     geos: results[5] || [],
+                    countries: [],
                     location: results[6] ? results[6].ll || null : null
                 });
             }
@@ -345,6 +346,7 @@ function cachedData(note) {
                 'userConditions': { 'required': false, 'type': 'Object' },
                 'drillConditions': { 'required': false, 'type': 'Object' },
                 'geos': { 'required': false, 'type': 'Array' },
+                'countries': { 'required': false, 'type': 'Array' },
                 'cohorts': { 'required': false, 'type': 'Array' },
                 'delayed': { 'required': false, 'type': 'Boolean' },
                 'sound': { 'required': false, 'type': 'String' },
@@ -482,6 +484,8 @@ function cachedData(note) {
         let [apps, geos, cohorts, prepared, mime, autoCohorts] = await Promise.all([
             skipAppsPlatforms ? Promise.resolve() : common.dbPromise('apps', 'find', {_id: {$in: data.apps.map(common.db.ObjectID)}}).then(apps1 => apps1 || []),
             data.geos && data.geos.length ? common.dbPromise('geos', 'find', {_id: {$in: data.geos.map(common.db.ObjectID)}}) : Promise.resolve(),
+            // TODO: Fetch country values from db
+            // data.countries && data.countries.length ? Promise.resolve() : Promise.resolve(),
             data.cohorts && data.cohorts.length ? common.dbPromise('cohorts', 'find', {_id: {$in: data.cohorts}}) : Promise.resolve(),
             data._id ? N.Note.load(common.db, data._id) : Promise.resolve(),
             data.media && data.type === 'message' ? mimeInfo(data.media) : Promise.resolve(),
@@ -507,6 +511,8 @@ function cachedData(note) {
         if (data.geos && data.geos.length && (!geos || data.geos.length !== geos.length)) {
             return [{error: 'No such geo'}];
         }
+
+        // TODO: Check if there's a `No such country` error
 
         if (data.cohorts && data.cohorts.length && (!cohorts || data.cohorts.length !== cohorts.length)) {
             return [{error: 'No such cohort'}];
@@ -555,6 +561,8 @@ function cachedData(note) {
                 return [{error: 'Geo changed after preparing message'}];
             }
 
+            // TOOD Check if countries were changed after preparing message
+
             if (data.cohorts && data.cohorts.length && (prepared.cohorts.length !== data.cohorts.length)) {
                 return [{error: 'Cohorts changed after preparing message'}];
             }
@@ -596,6 +604,7 @@ function cachedData(note) {
             userConditions: data.userConditions && Object.keys(data.userConditions).length ? data.userConditions : undefined,
             drillConditions: data.drillConditions && Object.keys(data.drillConditions).length ? data.drillConditions : undefined,
             geos: geos && geos.length ? data.geos : undefined,
+            countries: countries && countries.length ? data.countries : undefined,
             cohorts: cohorts && cohorts.length ? data.cohorts : undefined,
             delayed: data.delayed,
             test: data.test || false,

@@ -518,6 +518,21 @@ class Store extends Base {
             });
         }
 
+        // TODO: Update `query` to filter users by `cc`
+        if (note.countries && note.countries.length) {
+          let or = note.countries.map(country => {
+            return {
+              'cc': {$eq: country}
+            }
+          })
+
+          if(query.$and) {
+            query.$and.push({$or: or});
+          } else {
+            query.$or = or;
+          }
+        }
+
         if (note.cohorts && note.cohorts.length) {
             let chr = {};
             note.cohorts.forEach(id => {
