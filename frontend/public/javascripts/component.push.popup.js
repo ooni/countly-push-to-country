@@ -668,7 +668,12 @@ window.component('push.popup', function(popup) {
                     this.selectCountries = new C.multiselect.controller({
                       placeholder: t('Send to all users globally. Click to change...'),
                       options: countries,
-                      value: []
+                      value: function () {
+                        if (arguments.length) {
+                          message.countries(countries.filter(function (o) { return o.selected(); }).map(function (o) { return o.value(); }));
+                        }
+                        return countries;
+                      }
                     })
 
                     this.selectOnetimeCohorts = new C.multiselect.controller({
