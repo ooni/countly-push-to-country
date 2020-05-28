@@ -70,6 +70,7 @@ class Note {
         this.drillConditions = typeof data.drillConditions === 'string' ? JSON.parse(data.drillConditions) : data.drillConditions;
         this.source = data.source; // api or dash
         this.geos = data.geo ? [data.geo] : data.geos || undefined; // ID of geo object
+        this.countries = data.countries ? data.countries : undefined; // target countries
         this.cohorts = data.cohorts; // IDs of cohorts
         this.delayed = data.delayed; // whether to use "server" dates for auto messages & "schedule" date for one-time message
         this.messagePerLocale = data.messagePerLocale; // Map of localized messages
@@ -147,6 +148,7 @@ class Note {
             drillConditions: this.drillConditions ? JSON.stringify(this.drillConditions) : undefined,
             source: this.source,
             geos: this.geos,
+            countries: this.countries,
             cohorts: this.cohorts,
             delayed: this.delayed,
             messagePerLocale: this.messagePerLocale,
@@ -219,7 +221,7 @@ class Note {
                 diff[k] = note[k];
             }
         });
-        ['geos', 'cohorts', 'collapseKey', 'contentAvailable', 'delayWhileIdle', 'url', 'sound', 'badge', 'buttons', 'media', 'mediaMime', 'date', 'tz'].forEach(k => {
+        ['geos', 'countries', 'cohorts', 'collapseKey', 'contentAvailable', 'delayWhileIdle', 'url', 'sound', 'badge', 'buttons', 'media', 'mediaMime', 'date', 'tz'].forEach(k => {
             if (note[k] !== null && note[k] !== undefined && this[k] !== note[k]) {
                 diff[k] = note[k];
             }

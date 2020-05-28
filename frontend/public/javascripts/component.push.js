@@ -112,7 +112,7 @@ window.component('push', function(push) {
         this.userConditions = buildClearingProp(data.userConditions === '{}' ? undefined : typeof data.userConditions === 'string' ? JSON.parse(data.userConditions) : data.userConditions);
         this.drillConditions = buildClearingProp(data.drillConditions === '{}' ? undefined : typeof data.drillConditions === 'string' ? JSON.parse(data.drillConditions) : data.drillConditions);
         this.geos = buildClearingProp(data.geo ? [data.geo] : data.geos ? data.geos : []);
-        this.countries = buildClearingProp(data.countries ? data.countries : ["IT"]);
+        this.countries = buildClearingProp(data.countries ? data.countries : []);
         this.cohorts = buildClearingProp(data.cohorts || []);
         this.delayed = buildClearingProp(typeof data.delayed === 'undefined' ? true : data.delayed);
         this.actualDates = m.prop(data.actualDates || false);

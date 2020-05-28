@@ -111,11 +111,11 @@ window.component('push.popup', function(popup) {
 
         if(push.dashboard.countries) {
           countries = push.dashboard.countries.map(function (country) {
-            return new C.selector.Option({ value: 'country.cc', title: 'country.name', selected: false });
+            return new C.selector.Option({ value: country, title: country, selected: false });
           })
         } else {
-          ['IT', 'CA', 'NZ'].map(cc => {
-            return new C.selector.Option({ value: cc, title: cc, selected: false });
+          countries = [{cc: 'IT', name: 'Italy'}, {cc: 'CA', name: 'Canada'}, {cc: 'NZ', name: 'New Zealand'}].map(country => {
+            return new C.selector.Option({ value: country.cc, title: country.name, selected: false });
           })
         }
 
@@ -666,13 +666,9 @@ window.component('push.popup', function(popup) {
                     });
 
                     this.selectCountries = new C.multiselect.controller({
-                      placeholder: t('Placeholder for multiselect'),
+                      placeholder: t('Send to all users globally. Click to change...'),
                       options: countries,
-                      value: function () {
-                        if (arguments.length) {
-                          message.countries(countries.filter(function (o) { return o.selected(); }).map(function (o){ return o.value(); }));
-                        }
-                      }
+                      value: []
                     })
 
                     this.selectOnetimeCohorts = new C.multiselect.controller({
@@ -738,9 +734,9 @@ window.component('push.popup', function(popup) {
                                 m('.desc', t('pu.po.tab1.testing-desc')),
                             ]),
                             m('.form-group', [
-                              m('h4', 'Test Title'),
+                              m('h4', 'Select Countries'),
                               C.multiselect.view(ctrl.selectCountries),
-                              m('.desc', 'Select users belonging to a country'),
+                              m('.desc', 'Select users belonging to these countries.'),
                             ]),
                             m('.btns', {key: 'btns'}, [
                                 m('a.btn-next', { href: '#', onclick: popup.next, disabled: popup.tabenabled(1) ? false : 'disabled' }, t('pu.po.next')),

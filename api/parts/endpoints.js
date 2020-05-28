@@ -135,7 +135,8 @@ function cachedData(note) {
             common.dbPromise(app, 'count'),
             getCohortsPluginApi() ? common.dbPromise('cohorts', 'find', qqh) : Promise.resolve(),
             getGeoPluginApi() ? common.dbPromise(geo, 'find', qge) : Promise.resolve(),
-            getGeoPluginApi() ? new Promise((resolve) => resolve(geoip.lookup(params.ip_address))) : Promise.resolve()
+            getGeoPluginApi() ? new Promise((resolve) => resolve(geoip.lookup(params.ip_address))) : Promise.resolve(),
+            common.dbPromise(app, 'find')
         ]).then(results => {
             try {
                 var events = results.slice(0, 2).map(events1 => {
@@ -192,6 +193,8 @@ function cachedData(note) {
                     };
                 });
 
+                var countries = results[7].map(user => user.cc)
+
                 common.returnOutput(params, {
                     sent: events[0].m,
                     sent_automated: events[0].a,
@@ -201,7 +204,7 @@ function cachedData(note) {
                     users: results[3] ? results[3] : 0,
                     cohorts: results[4] || [],
                     geos: results[5] || [],
-                    countries: [],
+                    countries: countries || [],
                     location: results[6] ? results[6].ll || null : null
                 });
             }
