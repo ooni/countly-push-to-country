@@ -487,7 +487,7 @@ function cachedData(note) {
         let [apps, geos, countries, cohorts, prepared, mime, autoCohorts] = await Promise.all([
             skipAppsPlatforms ? Promise.resolve() : common.dbPromise('apps', 'find', {_id: {$in: data.apps.map(common.db.ObjectID)}}).then(apps1 => apps1 || []),
             data.geos && data.geos.length ? common.dbPromise('geos', 'find', {_id: {$in: data.geos.map(common.db.ObjectID)}}) : Promise.resolve(),
-            data.countries && data.countries.length ? Promise.resolve(['IT', 'CA']) : Promise.resolve(),
+            data.countries && data.countries.length ? common.dbPromise('app_users' + params.app_id, 'distinct', 'cc', {cc: {$in: data.countries}}).then(cc => cc) : Promise.resolve(),
             data.cohorts && data.cohorts.length ? common.dbPromise('cohorts', 'find', {_id: {$in: data.cohorts}}) : Promise.resolve(),
             data._id ? N.Note.load(common.db, data._id) : Promise.resolve(),
             data.media && data.type === 'message' ? mimeInfo(data.media) : Promise.resolve(),
