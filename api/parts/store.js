@@ -518,7 +518,7 @@ class Store extends Base {
             });
         }
 
-        // TODO: Update `query` to filter users by `cc`
+	// Include country filter in query
         if (note.countries && note.countries.length) {
           let or = note.countries.map(country => {
             return {
