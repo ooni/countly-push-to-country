@@ -111,7 +111,7 @@ window.component('push.popup', function(popup) {
 
         if(push.dashboard.countries) {
           countries = push.dashboard.countries.map(function (country) {
-            return new C.selector.Option({ value: country, title: country, selected: false });
+            return new C.selector.Option({ value: country.cc, title: `${country.cc} (${country.count})` , selected: false });
           })
         } else {
           countries = [{cc: 'IT', name: 'Italy'}, {cc: 'CA', name: 'Canada'}, {cc: 'NZ', name: 'New Zealand'}].map(country => {

@@ -193,7 +193,19 @@ function cachedData(note) {
                     };
                 });
 
-                var countries = results[7].map(user => user.cc)
+		// Map with countrywise counts
+                var countriesWithCounts = results[7].map(user => user.cc).reduce((acc, cc) => {
+			if (cc in acc) {
+				acc[cc]++
+			} else {
+				acc[cc] = 1
+			}
+			return acc
+		}, {})
+
+		// Array of {cc, count} for dashboard dropdown
+		var countries = Object.entries(countriesWithCounts).map(o => Object({cc: o[0], count: o[1]}))
+
 
                 common.returnOutput(params, {
                     sent: events[0].m,
