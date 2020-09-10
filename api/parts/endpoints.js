@@ -528,6 +528,7 @@ function cachedData(note) {
 
 	if (data.countries && data.countries.length && (!countries || data.countries.length !== countries.length)) {
 	    return [{error: 'No such country'}];
+	}
 
         if (data.cohorts && data.cohorts.length && (!cohorts || data.cohorts.length !== cohorts.length)) {
             return [{error: 'No such cohort'}];
