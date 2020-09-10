@@ -194,14 +194,17 @@ function cachedData(note) {
                 });
 
 		// Map with countrywise counts
-                var countriesWithCounts = results[7].map(user => user.cc).reduce((acc, cc) => {
-			if (cc in acc) {
-				acc[cc]++
-			} else {
-				acc[cc] = 1
-			}
-			return acc
-		}, {})
+                var countriesWithCounts = results[7]
+		    .filter(u => u.tkat || u.tkap || u.tkia || u.tkip || u.tkid)
+		    .map(u => u.cc)
+		    .reduce((acc, cc) => {
+			    if (cc in acc) {
+				    acc[cc]++
+			    } else {
+				    acc[cc] = 1
+			    }
+			    return acc
+		    }, {})
 
 		// Array of {cc, count} for dashboard dropdown
 		var countries = Object.entries(countriesWithCounts).map(o => Object({cc: o[0], count: o[1]}))
