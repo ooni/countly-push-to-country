@@ -109,13 +109,18 @@ window.component('push.popup', function(popup) {
             });
         }
 
+	// If dashboard API returns countries map, show it on the first screen
         if(push.dashboard.countries) {
           countries = push.dashboard.countries.map(function (country) {
-            return new C.selector.Option({ value: country.cc, title: `${country.cc} (${country.count})` , selected: false });
+            return new C.selector.Option({ value: country.cc, title: country.cc + ' (' + country.count + ')', selected: false });
           })
         } else {
-          countries = [{cc: 'IT', name: 'Italy'}, {cc: 'CA', name: 'Canada'}, {cc: 'NZ', name: 'New Zealand'}].map(country => {
-            return new C.selector.Option({ value: country.cc, title: country.name, selected: false });
+          countries = [
+	      {cc: 'ZZ', name: 'ERROR:'},
+	      {cc: 'Z1', name: 'Could not find "countries" data'},
+	      {cc: 'Z2', name: 'in dashboard API response'}
+	  ].map(function(country) {
+              return new C.selector.Option({ value: country.cc, title: country.name, selected: false });
           })
         }
 
