@@ -111,8 +111,12 @@ window.component('push.popup', function(popup) {
 
 	// If dashboard API returns countries map, show it on the first screen
         if(push.dashboard.countries) {
-          countries = push.dashboard.countries.map(function (country) {
-            return new C.selector.Option({ value: country.cc, title: country.cc + ' (' + country.count + ')', selected: false });
+          countries = push.dashboard.countries
+          .sort(function (a, b) { return a.cc > b.cc})
+          .map(function (country) {
+            var countryName = countlyLocation.getCountryName(country.cc)
+            var title = countryName + ' - ' + country.cc + ' (' + country.count + ')'
+            return new C.selector.Option({ value: country.cc, title: title, selected: false });
           })
         } else {
           countries = [
