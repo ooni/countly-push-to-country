@@ -112,10 +112,19 @@ window.component('push.popup', function(popup) {
 	// If dashboard API returns countries map, show it on the first screen
         if(push.dashboard.countries) {
           countries = push.dashboard.countries
-          .sort(function (a, b) { return a.cc > b.cc})
+          // Map country names from internal Countly API
           .map(function (country) {
-            var countryName = countlyLocation.getCountryName(country.cc)
-            var title = countryName + ' - ' + country.cc + ' (' + country.count + ')'
+            return {
+              cc: country.cc,
+              count: country.count,
+              name: countlyLocation.getCountryName(country.cc)
+            }
+          })
+          // Sort by country name
+          .sort(function (a, b) { return a.name > b.name})
+          // Generate options for the multiselect widget component
+          .map(function (country) {
+            var title = country.name + ' - ' + country.cc + ' (' + country.count + ')'
             return new C.selector.Option({ value: country.cc, title: title, selected: false });
           })
         } else {
